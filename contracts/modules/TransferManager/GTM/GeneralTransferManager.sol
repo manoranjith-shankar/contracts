@@ -6,6 +6,7 @@ import "../../../libraries/VersionUtils.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/cryptography/ECDSA.sol";
 import "./GeneralTransferManagerStorage.sol";
+import "./IWhitelistSTO.sol";
 
 /**
  * @title Transfer Manager module for core transfer validation functionality
@@ -13,6 +14,11 @@ import "./GeneralTransferManagerStorage.sol";
 contract GeneralTransferManager is GeneralTransferManagerStorage, TransferManager {
     using SafeMath for uint256;
     using ECDSA for bytes32;
+
+    IWhitelistSTO public whitelistSTO;
+
+    // Emit when whitelistSTO address get changed
+    event changeWhitelistSTOAddress(address _whitelistSTOAddress);
 
     // Emit when Issuance address get changed
     event ChangeIssuanceAddress(address _issuanceAddress);
@@ -63,6 +69,15 @@ contract GeneralTransferManager is GeneralTransferManagerStorage, TransferManage
      */
     function getInitFunction() public pure returns(bytes4) {
         return bytes4(0);
+    }
+
+    /**
+     * @notice Used to set custom whitelist STO contract
+     * @param _whitelistSTOAddress the contract address of the STO contract
+     */
+    function changeWhitelistSTO(address _whitelistSTOAddress) public withPerm(ADMIN) {
+        whitelistSTO = IWhitelistSTO(_whitelistSTOAddress);
+        emit changeWhitelistSTOAddress(_whitelistSTOAddress);
     }
 
     /**
@@ -294,7 +309,11 @@ contract GeneralTransferManager is GeneralTransferManagerStorage, TransferManage
         require(_investor != address(0), "Invalid investor");
         IDataStore dataStore = getDataStore();
         if (!_isExistingInvestor(_investor, dataStore)) {
-           dataStore.insertAddress(INVESTORSKEY, _investor);
+           address[] memory investors = new address[](1);
+           bool[] memory statuses = new bool[](1);
+           investors[0] = _investor;
+           statuses[0] = true;
+           whitelistSTO.setWhitelist(investors, statuses);
         }
         uint256 _data = VersionUtils.packKYC(_canSendAfter, _canReceiveAfter, _expiryTime, uint8(1));
         dataStore.setUint256(_getKey(WHITELIST, _investor), _data);
@@ -582,9 +601,8 @@ contract GeneralTransferManager is GeneralTransferManagerStorage, TransferManage
     }
 
     function _isExistingInvestor(address _investor, IDataStore dataStore) internal view returns(bool) {
-        uint256 data = dataStore.getUint256(_getKey(WHITELIST, _investor));
-        //extracts `added` from packed `_whitelistData`
-        return uint8(data) == 0 ? false : true;
+        bool isFoundWhitelistSTO = whitelistSTO.getWhitelist(_investor);
+        return isFoundWhitelistSTO;
     }
 
     function _getValuesForTransfer(address _from, address _to) internal view returns(uint64 canSendAfter, uint64 fromExpiry, uint64 canReceiveAfter, uint64 toExpiry) {
