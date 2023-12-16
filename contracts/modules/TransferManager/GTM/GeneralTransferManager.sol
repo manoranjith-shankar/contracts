@@ -6,7 +6,7 @@ import "../../../libraries/VersionUtils.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/cryptography/ECDSA.sol";
 import "./GeneralTransferManagerStorage.sol";
-import "./IWhitelistSTO.sol";
+import "../../../external/IEstateProtocolWhitelistSTO.sol";
 
 /**
  * @title Transfer Manager module for core transfer validation functionality
@@ -15,7 +15,7 @@ contract GeneralTransferManager is GeneralTransferManagerStorage, TransferManage
     using SafeMath for uint256;
     using ECDSA for bytes32;
 
-    IWhitelistSTO public whitelistSTO;
+    IEstateProtocolWhitelistSTO public whitelistSTO;
 
     // Emit when whitelistSTO address get changed
     event changeWhitelistSTOAddress(address _whitelistSTOAddress);
@@ -76,7 +76,7 @@ contract GeneralTransferManager is GeneralTransferManagerStorage, TransferManage
      * @param _whitelistSTOAddress the contract address of the STO contract
      */
     function changeWhitelistSTO(address _whitelistSTOAddress) public withPerm(ADMIN) {
-        whitelistSTO = IWhitelistSTO(_whitelistSTOAddress);
+        whitelistSTO = IEstateProtocolWhitelistSTO(_whitelistSTOAddress);
         emit changeWhitelistSTOAddress(_whitelistSTOAddress);
     }
 
@@ -596,8 +596,9 @@ contract GeneralTransferManager is GeneralTransferManagerStorage, TransferManage
         uint8 added
     )
     {
-        uint256 data = dataStore.getUint256(_getKey(WHITELIST, _investor));
-        (canSendAfter, canReceiveAfter, expiryTime, added)  = VersionUtils.unpackKYC(data);
+        // uint256 data = dataStore.getUint256(_getKey(WHITELIST, _investor));
+        // (canSendAfter, canReceiveAfter, expiryTime, added)  = VersionUtils.unpackKYC(data);
+        (canSendAfter, canReceiveAfter, expiryTime, added) = whitelistSTO.getInvestorKYCData(_investor, address(securityToken));
     }
 
     function _isExistingInvestor(address _investor, IDataStore dataStore) internal view returns(bool) {
