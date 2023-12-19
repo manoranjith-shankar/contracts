@@ -11,7 +11,7 @@ interface IEstateProtocolWhitelistSTO {
   }
 
   function modifyKYCData(address _investor, uint64 _expiryTime, bool _isAccredited) external;
-  function AddTokenLockStartTime(address token, uint64 startTime) external;
+  function addTokenLockStartTime(address token, uint64 startTime) external;
   function isExistingInvestor(address investor) external view returns (bool);
   function getInvestorKYCData(address investor, address token) external view returns (
     uint64 canSendAfter,

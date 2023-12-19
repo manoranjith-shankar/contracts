@@ -83,7 +83,7 @@ contract EstateProtocolWhitelistSTO is IEstateProtocolWhitelistSTO {
     return (unlockTime, pastBlockTimestamp, investorKYCData.expiryTime, uint8(1));
   }
 
-  function AddTokenLockStartTime(address token, uint64 startTime) external onlyAdmin {
+  function addTokenLockStartTime(address token, uint64 startTime) external onlyAdmin {
     tokenLockStartTime[token] = startTime;
 
     emit TokenLockStartTimeAdded({
