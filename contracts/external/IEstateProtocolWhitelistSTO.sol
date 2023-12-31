@@ -12,6 +12,12 @@ interface IEstateProtocolWhitelistSTO {
 
   function modifyKYCData(address _investor, uint64 _expiryTime, bool _isAccredited) external;
   function addTokenLockStartTime(address token, uint64 startTime) external;
+  function modifyTokenTransferStatus(address token, bool status) external;
+  function grantAdminRole(address account) external;
+  function revokeAdminRole(address account) external;
+  function grantOperatorRole(address account) external;
+  function revokeOperatorRole(address account) external;
+
   function isExistingInvestor(address investor) external view returns (bool);
   function getInvestorKYCData(address investor, address token) external view returns (
     uint64 canSendAfter,
@@ -19,15 +25,16 @@ interface IEstateProtocolWhitelistSTO {
     uint64 expiryTime,
     uint8 added
   );
+  function getTokenTransferStatus(address token) external view returns (bool);
+  
 
   event InvestorKYCDataUpdate(
     address indexed investor,
     uint64 expiryTime,
     bool isAccredited
   );
-
   event TokenLockStartTimeAdded(address token, uint64 startTime);
-
+  event TokenTransferStatus(address token, bool status);
   event AdminRoleGranted(address indexed account);
   event AdminRoleRevoked(address indexed account);
   event OperatorRoleGranted(address indexed account);

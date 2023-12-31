@@ -13,11 +13,13 @@ contract EstateProtocolWhitelistSTO is IEstateProtocolWhitelistSTO {
 
   mapping(address => bool) public isAdmin;
   mapping(address => bool) public isOperator;
+  mapping(address => bool) public tokenTransferStatus;
 
 
   constructor() public {
     admin = msg.sender;
     isAdmin[msg.sender] = true;
+    isOperator[msg.sender] = true;
   }
 
   modifier onlyAdmin() {
@@ -55,34 +57,6 @@ contract EstateProtocolWhitelistSTO is IEstateProtocolWhitelistSTO {
     });
   }
 
-  /**
-    * @notice Get investor in the existingInvestors `investor`.
-    */
-  function isExistingInvestor(address investor) external view returns (bool) {
-    return _existingInvestors[investor];
-  }
-
-  /**
-    * @notice Get investor in the whitelist `investor`.
-    */
-  function getInvestorKYCData(address investor, address token) external view returns (
-    uint64 canSendAfter,
-    uint64 canReceiveAfter,
-    uint64 expiryTime,
-    uint8 added
-  ) {
-    uint64 pastBlockTimestamp = uint64(block.timestamp - 1);
-
-    InvestorKYCData memory investorKYCData =  _investorKYCData[investor];
-
-    uint64 unlockTime = pastBlockTimestamp;
-
-    if (investorKYCData.isAccredited) {
-      unlockTime = tokenLockStartTime[token] + MAX_LOCK_PERIOD;
-    }
-    return (unlockTime, pastBlockTimestamp, investorKYCData.expiryTime, uint8(1));
-  }
-
   function addTokenLockStartTime(address token, uint64 startTime) external onlyAdmin {
     tokenLockStartTime[token] = startTime;
 
@@ -92,6 +66,10 @@ contract EstateProtocolWhitelistSTO is IEstateProtocolWhitelistSTO {
     });
   }
 
+  function modifyTokenTransferStatus(address token, bool status) external onlyAdmin {
+    tokenTransferStatus[token] = status;
+    emit TokenTransferStatus(token, status);
+  }
 
   function grantAdminRole(address account) external onlyAdmin {
     require(!isAdmin[account], "Account is already an admin");
@@ -115,6 +93,52 @@ contract EstateProtocolWhitelistSTO is IEstateProtocolWhitelistSTO {
     require(isOperator[account], "Account is not a operator");
     isOperator[account] = false;
     emit OperatorRoleRevoked(account);
+  }
+
+  /**
+    * @notice Get investor in the existingInvestors `investor`.
+    */
+  function isExistingInvestor(address investor) external view returns (bool) {
+    return _existingInvestors[investor];
+  }
+
+  /**
+    * @notice Get investor in the whitelist `investor`.
+    */
+  function getInvestorKYCData(address investor, address token) external view returns (
+    uint64 canSendAfter,
+    uint64 canReceiveAfter,
+    uint64 expiryTime,
+    uint8 added
+  ) {
+    bool isAlreadyExistingInvestor = _existingInvestors[investor];
+    uint64 futureBlockTimestamp = uint64(block.timestamp + MAX_LOCK_PERIOD);
+    uint64 pastBlockTimestamp = uint64(block.timestamp - 1);
+
+    if (isAlreadyExistingInvestor) {
+      uint64 _canSendAfter = pastBlockTimestamp;
+
+      InvestorKYCData memory investorKYCData = _investorKYCData[investor];
+      if (investorKYCData.isAccredited) {
+        _canSendAfter = tokenLockStartTime[token] + MAX_LOCK_PERIOD;
+      }
+
+      bool isTransferAllowed = tokenTransferStatus[token];
+      if (!isTransferAllowed) {
+        _canSendAfter += futureBlockTimestamp;
+      }
+
+      uint64 _canReceiveAfter = pastBlockTimestamp;
+
+      return (_canSendAfter, _canReceiveAfter, investorKYCData.expiryTime, uint8(1));
+    } else {
+      return (futureBlockTimestamp, futureBlockTimestamp, pastBlockTimestamp, uint8(1));
+    }
+    
+  }
+
+  function getTokenTransferStatus(address token) external view returns (bool) {
+    return tokenTransferStatus[token];
   }
 
 
