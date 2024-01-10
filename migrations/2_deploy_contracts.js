@@ -151,6 +151,13 @@ module.exports = function(deployer, network, accounts) {
                     ETHOracle = mockedOracle.address;
                 });
             })
+    } else if (network === "arbitrumMainnet") {
+        web3 = new Web3(new Web3.providers.HttpProvider("https://arbitrum-mainnet.infura.io/v3/22457d45ad4247e08bc6ab52316184c5"));
+        PolymathAccount = accounts[0];
+        PolyToken = "0xe12f29704f635f4a6e7ae154838d21f9b33809e9"; // Mainnet PolyToken Address
+        POLYOracle = "0xCa05e0621Bb1052c96eA08739ad235B4219f13b0"; // Poly Oracle Mainnet Address
+        ETHOracle = "0x00d99D06168d95f52852849008812B569D3cB37c"; // ETH Oracle Mainnet Address
+        StablePOLYOracle = ""; // TODO
     } else if (network === "mainnet") {
         web3 = new Web3(new Web3.providers.HttpProvider("https://mainnet.infura.io/g5xfoQ0jFSE9S5LwM1Ei"));
         PolymathAccount = accounts[0];
