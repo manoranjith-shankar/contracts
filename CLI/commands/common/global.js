@@ -24,6 +24,12 @@ function getGasPrice(networkId) {
     case 42: //Kovan
       gasPrice = 50000000000;
       break;
+    case 421614: // Arbitrum Sepolia
+      gasPrice = 50000000000;
+      break;
+    case 42161: // Arbitrum Mainnet One
+      gasPrice = 50000000000;
+      break;
     default:
       throw new Error('Network ID not identified');
   }

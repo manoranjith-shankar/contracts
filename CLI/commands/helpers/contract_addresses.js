@@ -21,6 +21,12 @@ function getPolymathRegistryAddress(networkId) {
     case 42: // KOVAN
       result = "0x5b215a7d39ee305ad28da29bf2f0425c6c2a00b3";
       break;
+    case 421614: // ARBITRUM SEPOLIA
+      result = "0xe33129eca5951e4b915b2EdeaB09aD7D01B0296E";
+      break;
+    case 42161: // ARBITRUM MAINNET
+        result = "0xA22a52b63A14eef0CDFeF4C2E72718B17fFE4c8f";
+        break;
   }
 
   return result;

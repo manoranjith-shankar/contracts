@@ -39,6 +39,7 @@ const VolumeRestrictionTMLogic = artifacts.require('./VolumeRestrictionTM.sol');
 const VolumeRestrictionLib = artifacts.require('./VolumeRestrictionLib.sol');
 const VestingEscrowWalletFactory = artifacts.require('./VestingEscrowWalletFactory.sol')
 const VestingEscrowWalletLogic = artifacts.require('./VestingEscrowWallet.sol');
+const EstateProtocolWhitelistSTO = artifacts.require('./EstateProtocolWhitelistSTO.sol');
 
 const Web3 = require("web3");
 let BN = Web3.utils.BN;
@@ -112,6 +113,50 @@ module.exports = function(deployer, network, accounts) {
         PolyToken = "0xb347b9f5b56b431b2cf4e1d90a5995f7519ca792"; // PolyToken Kovan Faucet Address
         POLYOracle = "0x461d98EF2A0c7Ac1416EF065840fF5d4C946206C"; // Poly Oracle Kovan Address
         ETHOracle = "0x14542627196c7dab26eb11ffd8a407ffc476de76"; // ETH Oracle Kovan Address
+        StablePOLYOracle = ""; // TODO
+    } else if (network === "arbitrumSepolia") {
+        web3 = new Web3(new Web3.providers.HttpProvider("https://sepolia-rollup.arbitrum.io/rpc/"));
+        PolymathAccount = accounts[0];
+        PolyToken = DevPolyToken.address; // Development network polytoken address
+        console.log(DevPolyToken);
+        deployer.deploy(DevPolyToken, { from: PolymathAccount }).then(() => {
+            DevPolyToken.deployed().then(mockedUSDToken => {
+                UsdToken = mockedUSDToken.address;
+            });
+        });
+        deployer
+            .deploy(MockOracle, PolyToken, web3.utils.fromAscii("POLY"), web3.utils.fromAscii("USD"), new BN(5).mul(new BN(10).pow(new BN(17))), { from: PolymathAccount }
+            ).then(() => {
+                return MockOracle.deployed();
+            }).then(mockedOracle => {
+                POLYOracle = mockedOracle.address;
+            }).then(() => {
+                return deployer.deploy(StableOracle, POLYOracle, new BN(10).mul(new BN(10).pow(new BN(16))), { from: PolymathAccount });
+            }).then(() => {
+                return StableOracle.deployed();
+            }).then(stableOracle => {
+                StablePOLYOracle = stableOracle.address;
+            })
+            .then(() => {
+                return deployer.deploy(EstateProtocolWhitelistSTO, { from: PolymathAccount })
+            }).then(() => {
+                return EstateProtocolWhitelistSTO.deployed();
+            });
+
+        deployer
+            .deploy(MockOracle, nullAddress, web3.utils.fromAscii("ETH"), web3.utils.fromAscii("USD"), new BN(500).mul(new BN(10).pow(new BN(18))), 
+                { from: PolymathAccount }
+            ).then(() => {
+                MockOracle.deployed().then(mockedOracle => {
+                    ETHOracle = mockedOracle.address;
+                });
+            })
+    } else if (network === "arbitrumMainnet") {
+        web3 = new Web3(new Web3.providers.HttpProvider("https://arbitrum-mainnet.infura.io/v3/22457d45ad4247e08bc6ab52316184c5"));
+        PolymathAccount = accounts[0];
+        PolyToken = "0xe12f29704f635f4a6e7ae154838d21f9b33809e9"; // Mainnet PolyToken Address
+        POLYOracle = "0xCa05e0621Bb1052c96eA08739ad235B4219f13b0"; // Poly Oracle Mainnet Address
+        ETHOracle = "0x00d99D06168d95f52852849008812B569D3cB37c"; // ETH Oracle Mainnet Address
         StablePOLYOracle = ""; // TODO
     } else if (network === "mainnet") {
         web3 = new Web3(new Web3.providers.HttpProvider("https://mainnet.infura.io/g5xfoQ0jFSE9S5LwM1Ei"));
