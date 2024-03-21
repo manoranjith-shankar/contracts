@@ -309,11 +309,7 @@ contract GeneralTransferManager is GeneralTransferManagerStorage, TransferManage
         require(_investor != address(0), "Invalid investor");
         IDataStore dataStore = getDataStore();
         if (!_isExistingInvestor(_investor, dataStore)) {
-           address[] memory investors = new address[](1);
-           bool[] memory statuses = new bool[](1);
-           investors[0] = _investor;
-           statuses[0] = true;
-           whitelistSTO.setWhitelist(investors, statuses);
+           dataStore.insertAddress(INVESTORSKEY, _investor);
         }
         uint256 _data = VersionUtils.packKYC(_canSendAfter, _canReceiveAfter, _expiryTime, uint8(1));
         dataStore.setUint256(_getKey(WHITELIST, _investor), _data);
@@ -602,7 +598,11 @@ contract GeneralTransferManager is GeneralTransferManagerStorage, TransferManage
     }
 
     function _isExistingInvestor(address _investor, IDataStore dataStore) internal view returns(bool) {
-        bool isFoundWhitelistSTO = whitelistSTO.getWhitelist(_investor);
+        // uint256 data = dataStore.getUint256(_getKey(WHITELIST, _investor));
+        // //extracts `added` from packed `_whitelistData`
+        // return uint8(data) == 0 ? false : true;
+
+        bool isFoundWhitelistSTO = whitelistSTO.isExistingInvestor(_investor);
         return isFoundWhitelistSTO;
     }
 
