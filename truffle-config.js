@@ -78,7 +78,7 @@ module.exports = {
     arbitrumMainnet: {
       provider: () => {
         const key = "";
-        let wallet = new HDWalletProvider(key, "https://arbitrum-mainnet.infura.io/v3/22457d45ad4247e08bc6ab52316184c5")
+        let wallet = new HDWalletProvider(key, "https://arb1.arbitrum.io/rpc")
         var nonceTracker = new NonceTrackerSubprovider()
         wallet.engine._providers.unshift(nonceTracker)
         nonceTracker.setEngine(wallet.engine)
