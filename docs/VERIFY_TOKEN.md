@@ -2,13 +2,30 @@
 
 ## Overview
 
-This guide outlines the steps to verify a token contract using Hardhat on the Arbitrum Mainnet.
+This guide provides detailed instructions for verifying a token contract using Hardhat on the Arbitrum Mainnet.
 
 ## Steps
 
-### 1. Prepare Arguments
+### 1. Ensure Node.js Version Compatibility
 
-Create a file named `arguments.js` and include the necessary details about the token from the SecurityTokenProxy constructor.
+Ensure that you are using Node.js version 18 or higher.
+
+### 2. Install Required NPM Packages
+
+Install Hardhat and the Hardhat Verify plugin by running the following commands:
+
+```bash
+npm install --save-dev hardhat
+npm install --save-dev @nomicfoundation/hardhat-verify
+```
+
+### 3. Set the Correct Solc Version
+
+Make sure to use Solc version 0.8.17+commit.8df45f5f.Linux.g++.
+
+### 4. Prepare Arguments
+
+Create a file named `arguments.js` and include the necessary details about the token from the SecurityTokenProxy constructor:
 
 ```javascript
 module.exports = [
@@ -21,9 +38,9 @@ module.exports = [
 ];
 ```
 
-### 2. Verify Contract
+### 5. Verify the Contract
 
-Run the following command:
+Run the following command to verify the contract:
 
 ```bash
 npx hardhat verify --network arbitrumMainnet --constructor-args arguments.js TOKEN_CONTRACT_ADDRESS
@@ -31,6 +48,15 @@ npx hardhat verify --network arbitrumMainnet --constructor-args arguments.js TOK
 
 Replace `TOKEN_CONTRACT_ADDRESS` with the address of the token contract you wish to verify.
 
+### 6. Cleanup
+
+After verifying the contract, you can uninstall the installed NPM packages using the following commands:
+
+```bash
+npm uninstall --save-dev hardhat
+npm uninstall --save-dev @nomicfoundation/hardhat-verify
+```
+
 ## Conclusion
 
-Following these steps will allow you to verify your token contract on the Arbitrum Mainnet successfully.
+Following these steps will allow you to successfully verify your token contract on the Arbitrum Mainnet.
