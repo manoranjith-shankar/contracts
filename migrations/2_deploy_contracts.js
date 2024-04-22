@@ -67,6 +67,11 @@ module.exports = function(deployer, network, accounts) {
             DevPolyToken.deployed().then(mockedUSDToken => {
                 UsdToken = mockedUSDToken.address;
             });
+        })
+        .then(() => {
+            return deployer.deploy(EstateProtocolWhitelistSTO, { from: PolymathAccount })
+        }).then(() => {
+            return EstateProtocolWhitelistSTO.deployed();
         });
         deployer
             .deploy(
@@ -665,6 +670,7 @@ module.exports = function(deployer, network, accounts) {
     VolumeRestrictionTMLogic:             ${VolumeRestrictionTMLogic.address}
     VestingEscrowWalletFactory:           ${VestingEscrowWalletFactory.address}
     VestingEscrowWalletLogic:             ${VestingEscrowWalletLogic.address}
+    EstateProtocolWhitelistSTO:           ${EstateProtocolWhitelistSTO.address}
     ---------------------------------------------------------------------------------
     `);
             console.log("\n");
