@@ -1,0 +1,64 @@
+type USDTieredSTOFactory @entity {
+  id: ID!
+  module: Bytes!
+  moduleName: Bytes!
+  moduleFactory: Bytes!
+  creator: Bytes!
+  setupCost: BigInt!
+  setupCostInPoly: BigInt!
+  timestamp: BigInt!
+  from: Bytes!
+}
+
+type ERC20DividendCheckpointFactory @entity {
+  id: ID!
+  module: Bytes!
+  moduleName: Bytes!
+  moduleFactory: Bytes!
+  creator: Bytes!
+  setupCost: BigInt!
+  setupCostInPoly: BigInt!
+  timestamp: BigInt!
+  from: Bytes!
+}
+
+
+type TokenPurchase @entity {
+  id: ID!
+  contractAddress: Bytes!
+  securityToken: Bytes!
+  purchaser: Bytes!
+  beneficiary: Bytes!
+  tokens: BigInt!
+  usdAmount: BigInt!
+  tierPrice: BigInt!
+  tier: BigInt!
+  timestamp: BigInt!
+}
+
+type ERC20DividendDeposited @entity {
+  id: ID!
+  depositor: Bytes!
+  checkpointId: BigInt!
+  maturity: BigInt!
+  expiry: BigInt!
+  token: Bytes!
+  amount: BigInt!
+  totalSupply: BigInt!
+  dividendIndex: BigInt!
+  name: Bytes!
+  contractAddress: Bytes!
+  timestamp: BigInt!
+}
+
+type EpnsNotificationCounter @entity {
+  id: ID!
+  totalCount: BigInt!
+}
+
+type EpnsPushNotification @entity {
+  id: ID!
+  notificationNumber: BigInt!
+  recipient: String!
+  notification: String!
+}
