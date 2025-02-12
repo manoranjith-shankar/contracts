@@ -1,8 +1,8 @@
 {
   "arbitrum-one": {
     "ERC20DividendCheckpoint": {
-      "address": "0x5968ad21e06213d3df7c6bd65bc8dbd4f33f1c1a",
-      "startBlock": 172074832
+      "address": "0x5968ad21E06213D3Df7c6bD65bc8DBD4f33F1c1A",
+      "startBlock": 0
     }
   }
 }
