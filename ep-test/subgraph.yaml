@@ -1,0 +1,56 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: ERC20DividendCheckpoint
+    network: arbitrum-one
+    source:
+      address: "0x5968ad21e06213d3df7c6bd65bc8dbd4f33f1c1a"
+      abi: ERC20DividendCheckpoint
+      startBlock: 172074832
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - ERC20DividendDeposited
+        - ERC20DividendClaimed
+        - ERC20DividendReclaimed
+        - ERC20DividendWithholdingWithdrawn
+        - SetDefaultExcludedAddresses
+        - SetWithholding
+        - SetWithholdingFixed
+        - SetWallet
+        - UpdateDividendDates
+        - Pause
+        - Unpause
+      abis:
+        - name: ERC20DividendCheckpoint
+          file: ./abis/ERC20DividendCheckpoint.json
+      eventHandlers:
+        - event: ERC20DividendDeposited(indexed address,uint256,uint256,uint256,indexed address,uint256,uint256,uint256,indexed bytes32)
+          handler: handleERC20DividendDeposited
+        - event: ERC20DividendClaimed(indexed address,indexed uint256,indexed address,uint256,uint256)
+          handler: handleERC20DividendClaimed
+        - event: ERC20DividendReclaimed(indexed address,indexed uint256,indexed address,uint256)
+          handler: handleERC20DividendReclaimed
+        - event: ERC20DividendWithholdingWithdrawn(indexed address,indexed uint256,indexed address,uint256)
+          handler: handleERC20DividendWithholdingWithdrawn
+        - event: SetDefaultExcludedAddresses(address[])
+          handler: handleSetDefaultExcludedAddresses
+        - event: SetWithholding(address[],uint256[])
+          handler: handleSetWithholding
+        - event: SetWithholdingFixed(address[],uint256)
+          handler: handleSetWithholdingFixed
+        - event: SetWallet(indexed address,indexed address)
+          handler: handleSetWallet
+        - event: UpdateDividendDates(indexed uint256,uint256,uint256)
+          handler: handleUpdateDividendDates
+        - event: Pause(address)
+          handler: handlePause
+        - event: Unpause(address)
+          handler: handleUnpause
+      file: ./src/erc-20-dividend-checkpoint.ts

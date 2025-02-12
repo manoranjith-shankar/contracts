@@ -1,0 +1,110 @@
+type ERC20DividendDeposited @entity(immutable: true) {
+  id: Bytes!
+  _depositor: Bytes! # address
+  _checkpointId: BigInt! # uint256
+  _maturity: BigInt! # uint256
+  _expiry: BigInt! # uint256
+  _token: Bytes! # address
+  _amount: BigInt! # uint256
+  _totalSupply: BigInt! # uint256
+  _dividendIndex: BigInt! # uint256
+  _name: Bytes! # bytes32
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ERC20DividendClaimed @entity(immutable: true) {
+  id: Bytes!
+  _payee: Bytes! # address
+  _dividendIndex: BigInt! # uint256
+  _token: Bytes! # address
+  _amount: BigInt! # uint256
+  _withheld: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ERC20DividendReclaimed @entity(immutable: true) {
+  id: Bytes!
+  _claimer: Bytes! # address
+  _dividendIndex: BigInt! # uint256
+  _token: Bytes! # address
+  _claimedAmount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ERC20DividendWithholdingWithdrawn @entity(immutable: true) {
+  id: Bytes!
+  _claimer: Bytes! # address
+  _dividendIndex: BigInt! # uint256
+  _token: Bytes! # address
+  _withheldAmount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type SetDefaultExcludedAddresses @entity(immutable: true) {
+  id: Bytes!
+  _excluded: [Bytes!]! # address[]
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type SetWithholding @entity(immutable: true) {
+  id: Bytes!
+  _investors: [Bytes!]! # address[]
+  _withholding: [BigInt!]! # uint256[]
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type SetWithholdingFixed @entity(immutable: true) {
+  id: Bytes!
+  _investors: [Bytes!]! # address[]
+  _withholding: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type SetWallet @entity(immutable: true) {
+  id: Bytes!
+  _oldWallet: Bytes! # address
+  _newWallet: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type UpdateDividendDates @entity(immutable: true) {
+  id: Bytes!
+  _dividendIndex: BigInt! # uint256
+  _maturity: BigInt! # uint256
+  _expiry: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Pause @entity(immutable: true) {
+  id: Bytes!
+  account: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Unpause @entity(immutable: true) {
+  id: Bytes!
+  account: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
