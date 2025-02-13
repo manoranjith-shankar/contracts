@@ -6,7 +6,7 @@ import {
   ChangeCostType as ChangeCostTypeEvent,
   GenerateModuleFromFactory as GenerateModuleFromFactoryEvent,
   ChangeSTVersionBound as ChangeSTVersionBoundEvent
-} from "../generated/Contract/Contract"
+} from "../generated/ERC20DividendCheckpointFactory/ERC20DividendCheckpointFactory"
 import {
   LogicContractSet,
   ModuleUpgraded,

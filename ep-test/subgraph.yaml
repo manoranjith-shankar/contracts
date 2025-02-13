@@ -5,12 +5,12 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum
-    name: Contract
-    network: arbitrum-sepolia
+    name: ERC20DividendCheckpointFactory
+    network: arbitrum-one
     source:
-      address: "0xEEEF9695F9030694b02d325d651468e991De7972"
-      abi: Contract
-      startBlock: 0
+      address: "0xc2423aAa4f9f342456BE4718a17A0DC973F39eEE"
+      abi: ERC20DividendCheckpointFactory
+      startBlock: 172075038
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -24,8 +24,8 @@ dataSources:
         - GenerateModuleFromFactory
         - ChangeSTVersionBound
       abis:
-        - name: Contract
-          file: ./abis/Contract.json
+        - name: ERC20DividendCheckpointFactory
+          file: ./abis/ERC20DividendCheckpointFactory.json
       eventHandlers:
         - event: LogicContractSet(string,uint256,address,bytes)
           handler: handleLogicContractSet
@@ -41,4 +41,4 @@ dataSources:
           handler: handleGenerateModuleFromFactory
         - event: ChangeSTVersionBound(string,uint8,uint8,uint8)
           handler: handleChangeSTVersionBound
-      file: ./src/contract.ts
+      file: ./src/erc-20-dividend-checkpoint-factory.ts

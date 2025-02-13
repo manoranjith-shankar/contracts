@@ -1,5 +1,14 @@
 [
   {
+    "constant": false,
+    "inputs": [{ "name": "_data", "type": "bytes" }],
+    "name": "deploy",
+    "outputs": [{ "name": "", "type": "address" }],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "constant": true,
     "inputs": [],
     "name": "name",
@@ -373,14 +382,5 @@
     ],
     "name": "ChangeSTVersionBound",
     "type": "event"
-  },
-  {
-    "constant": false,
-    "inputs": [{ "name": "_data", "type": "bytes" }],
-    "name": "deploy",
-    "outputs": [{ "name": "", "type": "address" }],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
   }
 ]

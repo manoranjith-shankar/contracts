@@ -8,7 +8,7 @@ import {
   ChangeCostType,
   GenerateModuleFromFactory,
   ChangeSTVersionBound
-} from "../generated/Contract/Contract"
+} from "../generated/ERC20DividendCheckpointFactory/ERC20DividendCheckpointFactory"
 
 export function createLogicContractSetEvent(
   _version: string,
