@@ -8,9 +8,9 @@ import {
 } from "matchstick-as/assembly/index"
 import { BigInt, Address, Bytes } from "@graphprotocol/graph-ts"
 import { LogicContractSet } from "../generated/schema"
-import { LogicContractSet as LogicContractSetEvent } from "../generated/ERC20DividendCheckpointFactory/ERC20DividendCheckpointFactory"
-import { handleLogicContractSet } from "../src/erc-20-dividend-checkpoint-factory"
-import { createLogicContractSetEvent } from "./erc-20-dividend-checkpoint-factory-utils"
+import { LogicContractSet as LogicContractSetEvent } from "../generated/Contract/Contract"
+import { handleLogicContractSet } from "../src/contract"
+import { createLogicContractSetEvent } from "./contract-utils"
 
 // Tests structure (matchstick-as >=0.5.0)
 // https://thegraph.com/docs/en/developer/matchstick/#tests-structure-0-5-0

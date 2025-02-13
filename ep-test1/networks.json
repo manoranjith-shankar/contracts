@@ -1,8 +1,8 @@
 {
-  "arbitrum-one": {
-    "ERC20DividendCheckpointFactory": {
-      "address": "0xc2423aAa4f9f342456BE4718a17A0DC973F39eEE",
-      "startBlock": 172075038
+  "arbitrum-sepolia": {
+    "Contract": {
+      "address": "0xEEEF9695F9030694b02d325d651468e991De7972",
+      "startBlock": 0
     }
   }
 }
