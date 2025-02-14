@@ -5,33 +5,12 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
-    name: USDTieredSTOFactory
-    network: arbitrum-sepolia
-    source:
-      address: '0x7B0D2991BA033e7E6A40ade5876850a5Be4bA9d9'
-      abi: USDTieredSTOFactory
-      startBlock: 733620
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.6
-      language: wasm/assemblyscript
-      file: ./mappings/factory.ts
-      entities:
-        - USDTieredSTOFactory
-      abis:
-        - name: USDTieredSTOFactory
-          file: ../../build/contracts/USDTieredSTOFactory.json
-      eventHandlers:
-        - event: GenerateModuleFromFactory(address,indexed bytes32,indexed address,address,uint256,uint256)
-          handler: handleGenerateModuleFromUSDTieredSTOFactory
-
-  - kind: ethereum/contract
     name: ERC20DividendCheckpointFactory
-    network: arbitrum-sepolia
+    network: arbitrum-one
     source:
-      address: '0xEEEF9695F9030694b02d325d651468e991De7972'
+      address: '0xc2423aAa4f9f342456BE4718a17A0DC973F39eEE'
       abi: ERC20DividendCheckpointFactory
-      startBlock: 733620
+      startBlock: 172075038
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -46,29 +25,31 @@ dataSources:
         - event: GenerateModuleFromFactory(address,indexed bytes32,indexed address,address,uint256,uint256)
           handler: handleGenerateModuleFromERC20DividendCheckpointFactory
 
-templates:
-  - name: USDTieredSTO
-    kind: ethereum/contract
-    network: arbitrum-sepolia
+  - kind: ethereum/contract
+    name: STFactory
+    network: arbitrum-one
     source:
-      abi: USDTieredSTO
+      address: '0x37Ddf5D84337bc0Fab7e807AC6B44eEe27446610'
+      abi: STFactory
+      startBlock: 172075038
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
       language: wasm/assemblyscript
-      file: ./mappings/usdTieredSTO.ts
+      file: ./mappings/factory.ts
       entities:
-        - USDTieredSTO
+        - STFactory
       abis:
-        - name: USDTieredSTO
-          file: ../../build/contracts/USDTieredSTO.json
+        - name: STFactory
+          file: ../../build/contracts/STFactory.json
       eventHandlers:
-        - event: TokenPurchase(indexed address,indexed address,uint256,uint256,uint256,uint256)
-          handler: handleTokenPurchase
+        - event: GenerateModuleFromFactory(address,indexed bytes32,indexed address,address,uint256,uint256)
+          handler: handleGenerateModuleFromERC20DividendCheckpointFactory
 
+templates:
   - name: ERC20DividendCheckpoint
     kind: ethereum/contract
-    network: arbitrum-sepolia
+    network: arbitrum-one
     source:
       abi: ERC20DividendCheckpoint
     mapping:

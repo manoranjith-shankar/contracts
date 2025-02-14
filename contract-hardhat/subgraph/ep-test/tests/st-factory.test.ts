@@ -8,9 +8,9 @@ import {
 } from "matchstick-as/assembly/index"
 import { BigInt, Address, Bytes } from "@graphprotocol/graph-ts"
 import { LogicContractSet } from "../generated/schema"
-import { LogicContractSet as LogicContractSetEvent } from "../generated/ERC20DividendCheckpointFactory/ERC20DividendCheckpointFactory"
-import { handleLogicContractSet } from "../src/erc-20-dividend-checkpoint-factory"
-import { createLogicContractSetEvent } from "./erc-20-dividend-checkpoint-factory-utils"
+import { LogicContractSet as LogicContractSetEvent } from "../generated/STFactory/STFactory"
+import { handleLogicContractSet } from "../src/st-factory"
+import { createLogicContractSetEvent } from "./st-factory-utils"
 
 // Tests structure (matchstick-as >=0.5.0)
 // https://thegraph.com/docs/en/developer/matchstick/#tests-structure-0-5-0
@@ -22,11 +22,13 @@ describe("Describe entity assertions", () => {
     let _logicContract = Address.fromString(
       "0x0000000000000000000000000000000000000001"
     )
+    let _initializationData = Bytes.fromI32(1234567890)
     let _upgradeData = Bytes.fromI32(1234567890)
     let newLogicContractSetEvent = createLogicContractSetEvent(
       _version,
       _upgrade,
       _logicContract,
+      _initializationData,
       _upgradeData
     )
     handleLogicContractSet(newLogicContractSetEvent)
@@ -60,6 +62,12 @@ describe("Describe entity assertions", () => {
       "0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1",
       "_logicContract",
       "0x0000000000000000000000000000000000000001"
+    )
+    assert.fieldEquals(
+      "LogicContractSet",
+      "0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1",
+      "_initializationData",
+      "1234567890"
     )
     assert.fieldEquals(
       "LogicContractSet",

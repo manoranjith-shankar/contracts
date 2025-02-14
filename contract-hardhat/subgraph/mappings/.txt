@@ -1,0 +1,29 @@
+EVENT: Transfer(_from, _to, amount)
+
+// UserCheckpointBalance
+{
+    userAddress: string,
+    checkpoint: int,
+    balance: Decimal
+}
+
+
+// Mapping File
+const currentCheckpoint =  securityToken.currentCheckpointId();
+
+for (let index = 0; index <= currentCheckpoint; index++) {
+    const fromBalance = securityToken.balanceOfAt(_from, index);
+    UserCheckpointBalance.userAddress = _from;
+    UserCheckpointBalance.checkpoint = index;
+    UserCheckpointBalance.balance = fromBalance;
+
+    UserCheckpointBalance.save()
+
+    const toBalance = securityToken.balanceOfAt(_to, index);
+    UserCheckpointBalance.userAddress = _to;
+    UserCheckpointBalance.checkpoint = index;
+    UserCheckpointBalance.balance = toBalance;
+
+    UserCheckpointBalance.save()
+
+}

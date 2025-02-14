@@ -1,5 +1,5 @@
-import { ERC20DividendDeposited as ERC20DividendDepositedSchema } from "../../generated/schema"
-import { ERC20DividendDeposited } from "../../generated/templates/ERC20DividendCheckpoint/ERC20DividendCheckpoint";
+import { ERC20DividendDeposited as ERC20DividendDepositedSchema } from "../generated/schema"
+import { ERC20DividendDeposited } from "../generated/templates/ERC20DividendCheckpoint/ERC20DividendCheckpoint";
 import { CHANNEL_ADDRESS } from "../constant";
 import { sendPushNotification } from "../helpers/pushNotification";
 
@@ -19,6 +19,10 @@ function notifyUsers(): void {
   const notification = `{\"type\": \"${type}\", \"title\": \"${title}\", \"body\": \"${body}\", \"subject\": \"${subject}\", \"message\": \"${message}\", \"image\": \"${image}\", \"secret\": \"${secret}\", \"cta\": \"${cta}\", \"category\": \"${category}\"}`;
   sendPushNotification(recipient, notification);
 }
+
+
+uint256 balance = securityToken.balanceOfAt(_payee, dividend.checkpointId);
+from - balances[_payee].balance;
 
 export function handleDividendCreation(event: ERC20DividendDeposited): void {
   const id = event.transaction.hash.toHex();

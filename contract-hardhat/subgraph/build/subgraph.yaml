@@ -1,0 +1,47 @@
+specVersion: 0.0.4
+description: Estate Protocol contract indexer
+repository: https://github.com/Estate-Protocol-Home/contracts
+schema:
+  file: schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: ERC20DividendCheckpointFactory
+    network: arbitrum-one
+    source:
+      address: "0xc2423aAa4f9f342456BE4718a17A0DC973F39eEE"
+      abi: ERC20DividendCheckpointFactory
+      startBlock: 172075038
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ERC20DividendCheckpointFactory/ERC20DividendCheckpointFactory.wasm
+      entities:
+        - ERC20DividendCheckpointFactory
+      abis:
+        - name: ERC20DividendCheckpointFactory
+          file: ERC20DividendCheckpointFactory/ERC20DividendCheckpointFactory.json
+      eventHandlers:
+        - event: GenerateModuleFromFactory(address,indexed bytes32,indexed
+            address,address,uint256,uint256)
+          handler: handleGenerateModuleFromERC20DividendCheckpointFactory
+templates:
+  - name: ERC20DividendCheckpoint
+    kind: ethereum/contract
+    network: arbitrum-one
+    source:
+      abi: ERC20DividendCheckpoint
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: templates/ERC20DividendCheckpoint/ERC20DividendCheckpoint.wasm
+      entities:
+        - ERC20DividendCheckpoint
+      abis:
+        - name: ERC20DividendCheckpoint
+          file: ERC20DividendCheckpoint/ERC20DividendCheckpoint.json
+      eventHandlers:
+        - event: ERC20DividendDeposited(indexed address,uint256,uint256,uint256,indexed
+            address,uint256,uint256,uint256,indexed bytes32)
+          handler: handleDividendCreation
