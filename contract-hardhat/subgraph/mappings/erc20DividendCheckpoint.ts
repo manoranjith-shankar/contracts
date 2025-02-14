@@ -20,10 +20,6 @@ function notifyUsers(): void {
   sendPushNotification(recipient, notification);
 }
 
-
-uint256 balance = securityToken.balanceOfAt(_payee, dividend.checkpointId);
-from - balances[_payee].balance;
-
 export function handleDividendCreation(event: ERC20DividendDeposited): void {
   const id = event.transaction.hash.toHex();
 
