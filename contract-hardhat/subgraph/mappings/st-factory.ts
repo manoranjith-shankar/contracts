@@ -32,6 +32,20 @@ export function handleLogicContractSet(event: LogicContractSetEvent): void {
   entity.save()
 }
 
+export function handleTokenUpgraded(event: TokenUpgradedEvent): void {
+  let entity = new TokenUpgraded(
+    event.transaction.hash.concatI32(event.logIndex.toI32()),
+  )
+  entity._securityToken = event.params._securityToken
+  entity._version = event.params._version
+
+  entity.blockNumber = event.block.number
+  entity.blockTimestamp = event.block.timestamp
+  entity.transactionHash = event.transaction.hash
+
+  entity.save()
+}
+
 export function handleDefaultTransferManagerUpdated(
   event: DefaultTransferManagerUpdatedEvent,
 ): void {
