@@ -1,0 +1,41 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: STFactory
+    network: arbitrum-one
+    source:
+      address: "0x37Ddf5D84337bc0Fab7e807AC6B44eEe27446610"
+      abi: STFactory
+      startBlock: 172075109
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - LogicContractSet
+        - TokenUpgraded
+        - DefaultTransferManagerUpdated
+        - DefaultDataStoreUpdated
+        - OwnershipTransferred
+        - LogicContractSet1
+      abis:
+        - name: STFactory
+          file: ./abis/STFactory.json
+      eventHandlers:
+        - event: LogicContractSet(string,uint256,address,bytes,bytes)
+          handler: handleLogicContractSet
+        - event: TokenUpgraded(indexed address,indexed uint256)
+          handler: handleTokenUpgraded
+        - event: DefaultTransferManagerUpdated(indexed address,indexed address)
+          handler: handleDefaultTransferManagerUpdated
+        - event: DefaultDataStoreUpdated(indexed address,indexed address)
+          handler: handleDefaultDataStoreUpdated
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: LogicContractSet(string,address,bytes)
+          handler: handleLogicContractSet1
+      file: ./src/st-factory.ts
