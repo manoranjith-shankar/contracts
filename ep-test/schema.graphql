@@ -1,37 +1,100 @@
-type LogicContractSet @entity(immutable: true) {
+type ModuleAdded @entity(immutable: true) {
   id: Bytes!
-  _version: String! # string
-  _upgrade: BigInt! # uint256
-  _logicContract: Bytes! # address
-  _initializationData: Bytes! # bytes
-  _upgradeData: Bytes! # bytes
+  _types: [Int!]! # uint8[]
+  _name: Bytes! # bytes32
+  _moduleFactory: Bytes! # address
+  _module: Bytes! # address
+  _moduleCost: BigInt! # uint256
+  _budget: BigInt! # uint256
+  _label: Bytes! # bytes32
+  _archived: Boolean! # bool
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
 }
 
-type TokenUpgraded @entity(immutable: true) {
+type ModuleUpgraded @entity(immutable: true) {
   id: Bytes!
-  _securityToken: Bytes! # address
-  _version: BigInt! # uint256
+  _types: [Int!]! # uint8[]
+  _module: Bytes! # address
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
 }
 
-type DefaultTransferManagerUpdated @entity(immutable: true) {
+type UpdateTokenDetails @entity(immutable: true) {
   id: Bytes!
-  _oldTransferManagerFactory: Bytes! # address
-  _newTransferManagerFactory: Bytes! # address
+  _oldDetails: String! # string
+  _newDetails: String! # string
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
 }
 
-type DefaultDataStoreUpdated @entity(immutable: true) {
+type UpdateTokenName @entity(immutable: true) {
   id: Bytes!
-  _oldDataStoreFactory: Bytes! # address
-  _newDataStoreFactory: Bytes! # address
+  _oldName: String! # string
+  _newName: String! # string
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type GranularityChanged @entity(immutable: true) {
+  id: Bytes!
+  _oldGranularity: BigInt! # uint256
+  _newGranularity: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type FreezeIssuance @entity(immutable: true) {
+  id: Bytes!
+
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type FreezeTransfers @entity(immutable: true) {
+  id: Bytes!
+  _status: Boolean! # bool
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type CheckpointCreated @entity(immutable: true) {
+  id: Bytes!
+  _checkpointId: BigInt! # uint256
+  _investorLength: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type SetController @entity(immutable: true) {
+  id: Bytes!
+  _oldController: Bytes! # address
+  _newController: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type TreasuryWalletChanged @entity(immutable: true) {
+  id: Bytes!
+  _oldTreasuryWallet: Bytes! # address
+  _newTreasuryWallet: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type DisableController @entity(immutable: true) {
+  id: Bytes!
+
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -46,11 +109,212 @@ type OwnershipTransferred @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type LogicContractSet1 @entity(immutable: true) {
+type TokenUpgraded @entity(immutable: true) {
   id: Bytes!
-  _version: String! # string
-  _logicContract: Bytes! # address
-  _upgradeData: Bytes! # bytes
+  _major: Int! # uint8
+  _minor: Int! # uint8
+  _patch: Int! # uint8
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ModuleArchived @entity(immutable: true) {
+  id: Bytes!
+  _types: [Int!]! # uint8[]
+  _module: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ModuleUnarchived @entity(immutable: true) {
+  id: Bytes!
+  _types: [Int!]! # uint8[]
+  _module: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ModuleRemoved @entity(immutable: true) {
+  id: Bytes!
+  _types: [Int!]! # uint8[]
+  _module: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ModuleBudgetChanged @entity(immutable: true) {
+  id: Bytes!
+  _moduleTypes: [Int!]! # uint8[]
+  _module: Bytes! # address
+  _oldBudget: BigInt! # uint256
+  _budget: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type TransferByPartition @entity(immutable: true) {
+  id: Bytes!
+  _fromPartition: Bytes! # bytes32
+  _operator: Bytes! # address
+  _from: Bytes! # address
+  _to: Bytes! # address
+  _value: BigInt! # uint256
+  _data: Bytes! # bytes
+  _operatorData: Bytes! # bytes
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type AuthorizedOperator @entity(immutable: true) {
+  id: Bytes!
+  operator: Bytes! # address
+  tokenHolder: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type RevokedOperator @entity(immutable: true) {
+  id: Bytes!
+  operator: Bytes! # address
+  tokenHolder: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type AuthorizedOperatorByPartition @entity(immutable: true) {
+  id: Bytes!
+  partition: Bytes! # bytes32
+  operator: Bytes! # address
+  tokenHolder: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type RevokedOperatorByPartition @entity(immutable: true) {
+  id: Bytes!
+  partition: Bytes! # bytes32
+  operator: Bytes! # address
+  tokenHolder: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type IssuedByPartition @entity(immutable: true) {
+  id: Bytes!
+  partition: Bytes! # bytes32
+  to: Bytes! # address
+  value: BigInt! # uint256
+  data: Bytes! # bytes
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type RedeemedByPartition @entity(immutable: true) {
+  id: Bytes!
+  partition: Bytes! # bytes32
+  operator: Bytes! # address
+  from: Bytes! # address
+  value: BigInt! # uint256
+  data: Bytes! # bytes
+  operatorData: Bytes! # bytes
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ControllerTransfer @entity(immutable: true) {
+  id: Bytes!
+  _controller: Bytes! # address
+  _from: Bytes! # address
+  _to: Bytes! # address
+  _value: BigInt! # uint256
+  _data: Bytes! # bytes
+  _operatorData: Bytes! # bytes
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ControllerRedemption @entity(immutable: true) {
+  id: Bytes!
+  _controller: Bytes! # address
+  _tokenHolder: Bytes! # address
+  _value: BigInt! # uint256
+  _data: Bytes! # bytes
+  _operatorData: Bytes! # bytes
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type DocumentRemoved @entity(immutable: true) {
+  id: Bytes!
+  _name: Bytes! # bytes32
+  _uri: String! # string
+  _documentHash: Bytes! # bytes32
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type DocumentUpdated @entity(immutable: true) {
+  id: Bytes!
+  _name: Bytes! # bytes32
+  _uri: String! # string
+  _documentHash: Bytes! # bytes32
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Issued @entity(immutable: true) {
+  id: Bytes!
+  _operator: Bytes! # address
+  _to: Bytes! # address
+  _value: BigInt! # uint256
+  _data: Bytes! # bytes
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Redeemed @entity(immutable: true) {
+  id: Bytes!
+  _operator: Bytes! # address
+  _from: Bytes! # address
+  _value: BigInt! # uint256
+  _data: Bytes! # bytes
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Transfer @entity(immutable: true) {
+  id: Bytes!
+  from: Bytes! # address
+  to: Bytes! # address
+  value: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Approval @entity(immutable: true) {
+  id: Bytes!
+  owner: Bytes! # address
+  spender: Bytes! # address
+  value: BigInt! # uint256
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!

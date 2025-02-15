@@ -36,3 +36,25 @@ type EpnsPushNotification @entity {
   recipient: String!
   notification: String!
 }
+
+type LogicContractSet @entity(immutable: true) {
+  id: Bytes!
+  _version: String! # string
+  _upgrade: BigInt! # uint256
+  _logicContract: Bytes! # address
+  _initializationData: Bytes! # bytes
+  _upgradeData: Bytes! # bytes
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Transfer @entity(immutable: true) {
+  id: Bytes!
+  from: Bytes! # address
+  to: Bytes! # address
+  value: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}

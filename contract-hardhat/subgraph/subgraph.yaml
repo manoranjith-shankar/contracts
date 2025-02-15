@@ -25,27 +25,6 @@ dataSources:
         - event: GenerateModuleFromFactory(address,indexed bytes32,indexed address,address,uint256,uint256)
           handler: handleGenerateModuleFromERC20DividendCheckpointFactory
 
-  - kind: ethereum/contract
-    name: STFactory
-    network: arbitrum-one
-    source:
-      address: '0x37Ddf5D84337bc0Fab7e807AC6B44eEe27446610'
-      abi: STFactory
-      startBlock: 172075038
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.6
-      language: wasm/assemblyscript
-      file: ./mappings/st-factory.ts
-      entities:
-        - STFactory
-      abis:
-        - name: STFactory
-          file: ../../build/contracts/STFactory.json
-      eventHandlers:
-        - event: LogicContractSet(string,uint256,address,bytes,bytes)
-          handler: handleLogicContractSet
-
 templates:
   - name: ERC20DividendCheckpoint
     kind: ethereum/contract
@@ -65,25 +44,5 @@ templates:
       eventHandlers:
         - event: ERC20DividendDeposited(indexed address,uint256,uint256,uint256,indexed address,uint256,uint256,uint256,indexed bytes32)
           handler: handleDividendCreation
-
-  - name: SecurityToken
-    kind: ethereum/contract
-    network: arbitrum-one
-    source:
-      abi: SecurityToken
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.6
-      language: wasm/assemblyscript
-      file: ./mappings/securityToken.ts
-      entities:
-        - SecurityToken
-      abis:
-        - name: SecurityToken
-          file: ../../build/contracts/SecurityToken.json
-      eventHandlers:
-        - event: Transfer(indexed address,indexed address,uint256)
-          handler: handleTransfer
-
 
 

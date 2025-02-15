@@ -1,8 +1,8 @@
 {
   "arbitrum-one": {
-    "STFactory": {
-      "address": "0x37Ddf5D84337bc0Fab7e807AC6B44eEe27446610",
-      "startBlock": 172075109
+    "SecurityToken": {
+      "address": "0xF7D5BD49b2975cFD86dd4D721f74f71f6149259a",
+      "startBlock": 172074927
     }
   }
 }
