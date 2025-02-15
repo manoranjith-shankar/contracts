@@ -1,11 +1,10 @@
-import { log } from "@graphprotocol/graph-ts";
 import {
   LogicContractSet as LogicContractSetEvent,
   TokenUpgraded as TokenUpgradedEvent,
   DefaultTransferManagerUpdated as DefaultTransferManagerUpdatedEvent,
   DefaultDataStoreUpdated as DefaultDataStoreUpdatedEvent,
   OwnershipTransferred as OwnershipTransferredEvent,
-  LogicContractSet1 as LogicContractSet1Event
+  LogicContractSet1 as LogicContractSet1Event,
 } from "../generated/STFactory/STFactory"
 import {
   LogicContractSet,
@@ -13,13 +12,12 @@ import {
   DefaultTransferManagerUpdated,
   DefaultDataStoreUpdated,
   OwnershipTransferred,
-  LogicContractSet1
-} from "../generated/schema"
-import { SecurityToken } from "../generated/templates"
+  LogicContractSet1,
+} from "../generated/schema1"
 
 export function handleLogicContractSet(event: LogicContractSetEvent): void {
   let entity = new LogicContractSet(
-    event.transaction.hash
+    event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
   entity._version = event.params._version
   entity._upgrade = event.params._upgrade
@@ -34,33 +32,11 @@ export function handleLogicContractSet(event: LogicContractSetEvent): void {
   entity.save()
 }
 
-export function handleTokenUpgraded(event: TokenUpgradedEvent): void {
-  log.info("Handling TokenUpgraded event for SecurityToken: {}", [
-    event.params._securityToken.toHex(),
-    event.params._version.toString(),
-    event.block.number.toString(),
-    event.transaction.hash.toHex()
-  ]);
-  SecurityToken.create(event.params._securityToken)
-  let entity = new TokenUpgraded(
-    event.transaction.hash
-  )
-  entity._securityToken = event.params._securityToken
-  entity._version = event.params._version
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
-  log.info("TokenUpgraded event handled successfully.", []);
-}
-
 export function handleDefaultTransferManagerUpdated(
-  event: DefaultTransferManagerUpdatedEvent
+  event: DefaultTransferManagerUpdatedEvent,
 ): void {
   let entity = new DefaultTransferManagerUpdated(
-    event.transaction.hash
+    event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
   entity._oldTransferManagerFactory = event.params._oldTransferManagerFactory
   entity._newTransferManagerFactory = event.params._newTransferManagerFactory
@@ -73,10 +49,10 @@ export function handleDefaultTransferManagerUpdated(
 }
 
 export function handleDefaultDataStoreUpdated(
-  event: DefaultDataStoreUpdatedEvent
+  event: DefaultDataStoreUpdatedEvent,
 ): void {
   let entity = new DefaultDataStoreUpdated(
-    event.transaction.hash
+    event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
   entity._oldDataStoreFactory = event.params._oldDataStoreFactory
   entity._newDataStoreFactory = event.params._newDataStoreFactory
@@ -89,13 +65,10 @@ export function handleDefaultDataStoreUpdated(
 }
 
 export function handleOwnershipTransferred(
-  event: OwnershipTransferredEvent
+  event: OwnershipTransferredEvent,
 ): void {
-  log.info("Handling ownership transferred", [
-    event.transaction.hash.toHex(),
-  ]);
   let entity = new OwnershipTransferred(
-    event.transaction.hash
+    event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
   entity.previousOwner = event.params.previousOwner
   entity.newOwner = event.params.newOwner
@@ -105,12 +78,11 @@ export function handleOwnershipTransferred(
   entity.transactionHash = event.transaction.hash
 
   entity.save()
-  log.info("Ownership transfer event handled successfully.", []);
 }
 
 export function handleLogicContractSet1(event: LogicContractSet1Event): void {
   let entity = new LogicContractSet1(
-    event.transaction.hash
+    event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
   entity._version = event.params._version
   entity._logicContract = event.params._logicContract
