@@ -28,6 +28,12 @@ for (let index = 0; index <= currentCheckpoint; index++) {
 
 }
 
+SecurityTokenRegistryContractAddress: '0xee927774090309B05fB8AC99d8B4aa0c03e22ea0'
+SecurityTokenLogicContractAddress: '0xF7D5BD49b2975cFD86dd4D721f74f71f6149259a'   
+
+STFactoryContractAddress: '0x37Ddf5D84337bc0Fab7e807AC6B44eEe27446610'
+TO
+SecurityTokenRegistryProxyContractAddress: '0x096C0F11E046Cd1dAAB53F2612512cd5cb84F325'
 
 specVersion: 0.0.4
 description: Estate Protocol contract indexer
