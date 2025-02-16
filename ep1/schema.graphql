@@ -1,0 +1,6 @@
+type ExampleEntity @entity {
+  id: Bytes!
+  count: BigInt!
+  _version: String! # string
+  _upgrade: BigInt! # uint256
+}

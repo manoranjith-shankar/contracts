@@ -7,8 +7,8 @@ import {
   afterAll
 } from "matchstick-as/assembly/index"
 import { BigInt, Address, Bytes } from "@graphprotocol/graph-ts"
-import { LogicContractSet } from "../generated/schema"
-import { LogicContractSet as LogicContractSetEvent } from "../generated/STFactory/STFactory"
+import { ExampleEntity } from "../generated/schema"
+import { LogicContractSet } from "../generated/STFactory/STFactory"
 import { handleLogicContractSet } from "../src/st-factory"
 import { createLogicContractSetEvent } from "./st-factory-utils"
 
@@ -41,37 +41,37 @@ describe("Describe entity assertions", () => {
   // For more test scenarios, see:
   // https://thegraph.com/docs/en/developer/matchstick/#write-a-unit-test
 
-  test("LogicContractSet created and stored", () => {
-    assert.entityCount("LogicContractSet", 1)
+  test("ExampleEntity created and stored", () => {
+    assert.entityCount("ExampleEntity", 1)
 
     // 0xa16081f360e3847006db660bae1c6d1b2e17ec2a is the default address used in newMockEvent() function
     assert.fieldEquals(
-      "LogicContractSet",
-      "0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1",
+      "ExampleEntity",
+      "0xa16081f360e3847006db660bae1c6d1b2e17ec2a",
       "_version",
       "Example string value"
     )
     assert.fieldEquals(
-      "LogicContractSet",
-      "0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1",
+      "ExampleEntity",
+      "0xa16081f360e3847006db660bae1c6d1b2e17ec2a",
       "_upgrade",
       "234"
     )
     assert.fieldEquals(
-      "LogicContractSet",
-      "0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1",
+      "ExampleEntity",
+      "0xa16081f360e3847006db660bae1c6d1b2e17ec2a",
       "_logicContract",
       "0x0000000000000000000000000000000000000001"
     )
     assert.fieldEquals(
-      "LogicContractSet",
-      "0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1",
+      "ExampleEntity",
+      "0xa16081f360e3847006db660bae1c6d1b2e17ec2a",
       "_initializationData",
       "1234567890"
     )
     assert.fieldEquals(
-      "LogicContractSet",
-      "0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1",
+      "ExampleEntity",
+      "0xa16081f360e3847006db660bae1c6d1b2e17ec2a",
       "_upgradeData",
       "1234567890"
     )
