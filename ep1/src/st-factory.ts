@@ -1,81 +1,49 @@
 import {
-  LogicContractSet as LogicContractSetEvent,
-  TokenUpgraded as TokenUpgradedEvent,
-  DefaultTransferManagerUpdated as DefaultTransferManagerUpdatedEvent,
-  DefaultDataStoreUpdated as DefaultDataStoreUpdatedEvent,
   OwnershipTransferred as OwnershipTransferredEvent,
-  LogicContractSet1 as LogicContractSet1Event
 } from "../generated/STFactory/STFactory"
 import {
-  LogicContractSet,
-  TokenUpgraded,
-  DefaultTransferManagerUpdated,
-  DefaultDataStoreUpdated,
   OwnershipTransferred,
-  LogicContractSet1
 } from "../generated/schema"
+import { ethereum } from '@graphprotocol/graph-ts'
+import { TokenDeployment, InternalTransaction } from '../generated/schema'
+import { SecurityToken as SecurityTokenTemplate } from '../generated/templates'
+import { STGetter } from "../generated/templates/STGetter/STGetter"
 
-export function handleLogicContractSet(event: LogicContractSetEvent): void {
-  let entity = new LogicContractSet(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
+export function handleDeployToken(call: ethereum.Call): void {
+  let tokenDeployment = new TokenDeployment(call.transaction.hash.toHexString())
+  
+  // Get the return value (deployed token address)
+  let returnValue = call.outputValues[0].value.toAddress()
+  
+  tokenDeployment.token = returnValue
+  tokenDeployment.creator = call.from
+  tokenDeployment.name = call.inputValues[0].value.toString()
+  tokenDeployment.symbol = call.inputValues[1].value.toString()
+  tokenDeployment.decimals = call.inputValues[2].value.toI32()
+  tokenDeployment.tokenDetails = call.inputValues[3].value.toString()
+  tokenDeployment.divisible = call.inputValues[5].value.toBoolean()
+  
+  tokenDeployment.blockNumber = call.block.number
+  tokenDeployment.blockTimestamp = call.block.timestamp
+  tokenDeployment.transactionHash = call.transaction.hash
+
+  SecurityTokenTemplate.create(returnValue)
+
+  tokenDeployment.save()
+
+  // internal transaction
+  let internalTx = new InternalTransaction(
+    call.transaction.hash.toHexString() + "-deploy"
   )
-  entity._version = event.params._version
-  entity._upgrade = event.params._upgrade
-  entity._logicContract = event.params._logicContract
-  entity._initializationData = event.params._initializationData
-  entity._upgradeData = event.params._upgradeData
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
-}
-
-export function handleTokenUpgraded(event: TokenUpgradedEvent): void {
-  let entity = new TokenUpgraded(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity._securityToken = event.params._securityToken
-  entity._version = event.params._version
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
-}
-
-export function handleDefaultTransferManagerUpdated(
-  event: DefaultTransferManagerUpdatedEvent
-): void {
-  let entity = new DefaultTransferManagerUpdated(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity._oldTransferManagerFactory = event.params._oldTransferManagerFactory
-  entity._newTransferManagerFactory = event.params._newTransferManagerFactory
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
-}
-
-export function handleDefaultDataStoreUpdated(
-  event: DefaultDataStoreUpdatedEvent
-): void {
-  let entity = new DefaultDataStoreUpdated(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity._oldDataStoreFactory = event.params._oldDataStoreFactory
-  entity._newDataStoreFactory = event.params._newDataStoreFactory
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
+  internalTx.from = call.from
+  internalTx.to = returnValue
+  internalTx.value = call.transaction.value
+  internalTx.methodName = "deployToken"
+  internalTx.blockNumber = call.block.number
+  internalTx.blockTimestamp = call.block.timestamp
+  internalTx.transactionHash = call.transaction.hash
+  
+  internalTx.save()
 }
 
 export function handleOwnershipTransferred(
@@ -86,21 +54,6 @@ export function handleOwnershipTransferred(
   )
   entity.previousOwner = event.params.previousOwner
   entity.newOwner = event.params.newOwner
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
-}
-
-export function handleLogicContractSet1(event: LogicContractSet1Event): void {
-  let entity = new LogicContractSet1(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity._version = event.params._version
-  entity._logicContract = event.params._logicContract
-  entity._upgradeData = event.params._upgradeData
 
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp

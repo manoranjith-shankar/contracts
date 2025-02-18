@@ -3,6 +3,9 @@
     "STFactory": {
       "address": "0x37Ddf5D84337bc0Fab7e807AC6B44eEe27446610",
       "startBlock": 172075109
+    },
+    "SecurityTokenRegistry": {
+      "address": "0xee927774090309B05fB8AC99d8B4aa0c03e22ea0"
     }
   }
 }

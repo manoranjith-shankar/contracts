@@ -1,42 +1,3 @@
-type LogicContractSet @entity(immutable: true) {
-  id: Bytes!
-  _version: String! # string
-  _upgrade: BigInt! # uint256
-  _logicContract: Bytes! # address
-  _initializationData: Bytes! # bytes
-  _upgradeData: Bytes! # bytes
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type TokenUpgraded @entity(immutable: true) {
-  id: Bytes!
-  _securityToken: Bytes! # address
-  _version: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type DefaultTransferManagerUpdated @entity(immutable: true) {
-  id: Bytes!
-  _oldTransferManagerFactory: Bytes! # address
-  _newTransferManagerFactory: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type DefaultDataStoreUpdated @entity(immutable: true) {
-  id: Bytes!
-  _oldDataStoreFactory: Bytes! # address
-  _newDataStoreFactory: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
 type OwnershipTransferred @entity(immutable: true) {
   id: Bytes!
   previousOwner: Bytes! # address
@@ -46,12 +7,85 @@ type OwnershipTransferred @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type LogicContractSet1 @entity(immutable: true) {
-  id: Bytes!
-  _version: String! # string
-  _logicContract: Bytes! # address
-  _upgradeData: Bytes! # bytes
+type TokenDeployment @entity {
+  id: ID!
+  token: Bytes! # address
+  creator: Bytes! # address
+  name: String!
+  symbol: String!
+  decimals: Int!
+  tokenDetails: String!
+  divisible: Boolean!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
 }
+
+type InternalTransaction @entity {
+  id: ID!
+  from: Bytes! # address
+  to: Bytes! # address
+  value: BigInt!
+  methodName: String!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type UserCheckpointBalance @entity {
+  id: ID!
+  userAddress: Bytes!
+  checkpoint: BigInt!
+  checkpointBalance: BigInt! # balance of the user at the checkpoint
+  token: SecurityToken!
+  transferAmount: BigInt! # amount of tokens transferred to the user
+  transactionHash: Bytes! # transaction hash of the transfer
+}
+
+type SecurityToken @entity {
+  id: ID!
+  address: Bytes!
+  currentCheckpoint: BigInt!
+  name: String!
+  symbol: String!
+  decimals: Int!
+  userBalances: [UserCheckpointBalance!]! @derivedFrom(field: "token")
+}
+
+type ERC20DividendCheckpointFactory @entity {
+  id: ID!
+  module: Bytes!
+  moduleName: Bytes!
+  moduleFactory: Bytes!
+  creator: Bytes!
+  setupCost: BigInt!
+  setupCostInPoly: BigInt!
+  timestamp: BigInt!
+  from: Bytes!
+}
+
+type ERC20DividendDeposited @entity {
+  id: ID!
+  depositor: Bytes!
+  checkpointId: BigInt!
+  maturity: BigInt!
+  expiry: BigInt!
+  token: Bytes!
+  amount: BigInt!
+  totalSupply: BigInt!
+  dividendIndex: BigInt!
+  name: Bytes!
+  contractAddress: Bytes!
+  timestamp: BigInt!
+}
+
+type Transfer @entity(immutable: true) {
+  id: Bytes!
+  from: Bytes! # address
+  to: Bytes! # address
+  value: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
