@@ -37,7 +37,7 @@ dataSources:
       kind: ethereum/events
       apiVersion: 0.0.6
       language: wasm/assemblyscript
-      file: ./src/factory.ts
+      file: ./src/dividend-factory.ts
       entities:
         - ERC20DividendCheckpointFactory
       abis:
@@ -91,3 +91,5 @@ templates:
       eventHandlers:
         - event: ERC20DividendDeposited(indexed address,uint256,uint256,uint256,indexed address,uint256,uint256,uint256,indexed bytes32)
           handler: handleDividendCreation
+        - event: ERC20DividendClaimed(indexed address,indexed uint256,indexed address,uint256,uint256)
+          handler: handleDividendClaim

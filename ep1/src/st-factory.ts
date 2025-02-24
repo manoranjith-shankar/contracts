@@ -7,7 +7,6 @@ import {
 import { ethereum } from '@graphprotocol/graph-ts'
 import { TokenDeployment, InternalTransaction } from '../generated/schema'
 import { SecurityToken as SecurityTokenTemplate } from '../generated/templates'
-import { STGetter } from "../generated/templates/STGetter/STGetter"
 
 export function handleDeployToken(call: ethereum.Call): void {
   let tokenDeployment = new TokenDeployment(call.transaction.hash.toHexString())

@@ -5,7 +5,7 @@ import {
   clearStore,
   beforeAll,
   afterAll
-} from "matchstick-as/assembly/index"
+} from "matchstick-as"
 import { Address, BigInt } from "@graphprotocol/graph-ts"
 import { Pause } from "../generated/schema"
 import { Pause as PauseEvent } from "../generated/SecurityTokenRegistry/SecurityTokenRegistry"

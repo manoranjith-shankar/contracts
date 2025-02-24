@@ -1,15 +1,13 @@
-import { Bytes } from '@graphprotocol/graph-ts'
-
 import {
   ERC20DividendCheckpointFactory as ERC20DividendCheckpointFactorySchema
 } from "../generated/schema";
 import { GenerateModuleFromFactory as GenerateModuleFromERC20DividendCheckpointFactoryEvent } from '../generated/ERC20DividendCheckpointFactory/ERC20DividendCheckpointFactory';
-import { ERC20DividendCheckpoint } from "../generated/templates"
+import { ERC20DividendCheckpoint as ERC20DividendCheckpointTemplate } from "../generated/templates"
 
 export function handleGenerateModuleFromERC20DividendCheckpointFactory(
   event: GenerateModuleFromERC20DividendCheckpointFactoryEvent
 ): void {
-  ERC20DividendCheckpoint.create(event.params._module);
+  ERC20DividendCheckpointTemplate.create(event.params._module);
 
   const id = event.transaction.hash.toHex();
 

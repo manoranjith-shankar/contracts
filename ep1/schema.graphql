@@ -37,6 +37,7 @@ type UserCheckpointBalance @entity {
   userAddress: Bytes!
   checkpoint: BigInt!
   checkpointBalance: BigInt! # balance of the user at the checkpoint
+  calculatedDividend: BigInt! # dividend amount calculated for the user at the checkpoint
   token: SecurityToken!
   transferAmount: BigInt! # amount of tokens transferred to the user
   transactionHash: Bytes! # transaction hash of the transfer
@@ -49,7 +50,6 @@ type SecurityToken @entity {
   name: String!
   symbol: String!
   decimals: Int!
-  userBalances: [UserCheckpointBalance!]! @derivedFrom(field: "token")
 }
 
 type ERC20DividendCheckpointFactory @entity {
@@ -77,6 +77,19 @@ type ERC20DividendDeposited @entity {
   name: Bytes!
   contractAddress: Bytes!
   timestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ERC20DividendClaimed @entity {
+  id: ID!
+  payee: Bytes!
+  dividendIndex: BigInt!
+  token: Bytes!
+  amount: BigInt!
+  withheld: BigInt!
+  contractAddress: Bytes!
+  timestamp: BigInt!
+  transactionHash: Bytes!
 }
 
 type Transfer @entity(immutable: true) {
@@ -84,6 +97,7 @@ type Transfer @entity(immutable: true) {
   from: Bytes! # address
   to: Bytes! # address
   value: BigInt! # uint256
+  token: SecurityToken!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
