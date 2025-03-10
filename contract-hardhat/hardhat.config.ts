@@ -11,41 +11,52 @@ const {
   PROVIDER_URL,
   OWNER_PRIVATE_KEY,
   ETHERSCAN_API_KEY,
+  MNEMONIC,
+  RPC_URL,
+  SOURCIFY_API_URL,
 } = process.env;
 
 const accounts = [...(OWNER_PRIVATE_KEY ? [OWNER_PRIVATE_KEY] : [])];
 
 const config: HardhatUserConfig = {
   networks: {
-    local: {
-      url: PROVIDER_URL,
-      chainId: 31337,
-    },
-    hardhat: {
-      chainId: 1337,
-    },
-    localhost: {
-      chainId: 1337,
-      url: 'http://localhost:8545',
-    },
-    goerli: {
-      url: PROVIDER_URL,
-      accounts,
-      chainId: 5,
-    },
-    arbitrumSepolia: {
-      url: PROVIDER_URL,
-      accounts,
-      chainId: 421614,
-      timeout: 60 * 60 * 1000 // 1 hour
-    },
-    arbitrumMainnet: {
-      url: PROVIDER_URL,
-      accounts,
-      chainId: 42161,
-      timeout: 60 * 60 * 1000 // 1 hour
+    // local: {
+    //   url: PROVIDER_URL,
+    //   chainId: 31337,
+    // },
+    // hardhat: {
+    //   chainId: 1337,
+    // },
+    // localhost: {
+    //   chainId: 1337,
+    //   url: 'http://localhost:8545',
+    // },
+    // goerli: {
+    //   url: PROVIDER_URL,
+    //   accounts,
+    //   chainId: 5,
+    // },
+    // arbitrumSepolia: {
+    //   url: PROVIDER_URL,
+    //   accounts,
+    //   chainId: 421614,
+    //   timeout: 60 * 60 * 1000 // 1 hour
+    // },
+    // arbitrumMainnet: {
+    //   url: PROVIDER_URL,
+    //   accounts,
+    //   chainId: 42161,
+    //   timeout: 60 * 60 * 1000 // 1 hour
+    // },
+    arbitrum_fork: {
+      url: RPC_URL,
+      accounts: {
+        mnemonic: MNEMONIC,
+        path: "m/44'/60'/0'/0",
+        initialIndex: 0,
+      },
     }
-  }, 
+  },
   solidity: {
     version: '0.5.8',
     settings: {
@@ -54,6 +65,10 @@ const config: HardhatUserConfig = {
         runs: 200,
       },
     },
+  },
+  sourcify: { 
+    enabled: true, 
+    apiUrl: SOURCIFY_API_URL, 
   },
   etherscan: {
     apiKey: ETHERSCAN_API_KEY
