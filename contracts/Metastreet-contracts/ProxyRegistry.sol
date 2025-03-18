@@ -3,14 +3,15 @@ pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
+import "./Liquidity1155.sol";
 
 /**
  * @title ILockingFactory
  * @dev Interface for the LockingFactory implementation
  */
 interface ILockingFactory {
-    function initialize(address user, address stTokenAddress) external;
-    function upgradeTo(address newImplementation) external;
+    function initialize(address user, address stTokenAddress, address liquidityTokenAddress) external;
+    function upgradeToAndCall(address newImplementation, bytes memory data) external;
 }
 
 /**
@@ -20,6 +21,7 @@ interface ILockingFactory {
  */
 contract ProxyRegistry is Ownable {
     address public currentImplementation;
+    Liquidity1155 public immutable liquidity1155;
 
     // Storage mappings
     mapping(address => address) public userToFactory;
@@ -43,6 +45,8 @@ contract ProxyRegistry is Ownable {
     constructor(address initialImplementation) Ownable(msg.sender) {
         if (initialImplementation == address(0)) revert ZeroAddressNotAllowed();
         currentImplementation = initialImplementation;
+
+        liquidity1155 = new Liquidity1155("https://ipfs.io/ipfs/bafkreigzrfa3qwnlisls2sdx65wje4mrajm2nzagayr22ilklppysyfhiy");
     }
     
     /**
@@ -65,6 +69,10 @@ contract ProxyRegistry is Ownable {
         // Deploy new factory
         address factory = _deployFactory(_userAddress, _stTokenAddress);
 
+        // Assign factory as minter and burner in ERC1155 contract
+        liquidity1155.addMinter(factory);
+        liquidity1155.addBurner(factory);
+
         // Update state in storage
         pairToFactory[pairKey] = factory;
         userToFactory[_userAddress] = factory;
@@ -82,7 +90,8 @@ contract ProxyRegistry is Ownable {
         bytes memory initData = abi.encodeWithSelector(
             ILockingFactory.initialize.selector,
             user,
-            stTokenAddress
+            stTokenAddress,
+            address(liquidity1155)
         );
         
         return address(new ERC1967Proxy(
@@ -111,7 +120,7 @@ contract ProxyRegistry is Ownable {
     function upgradeFactory(address factory) external onlyOwner {
         if (factory == address(0)) revert FactoryCannotBeZeroAddress();
         
-        ILockingFactory(factory).upgradeTo(currentImplementation);
+        ILockingFactory(factory).upgradeToAndCall(currentImplementation, "0x");
     }
     
     /**
@@ -145,7 +154,7 @@ contract ProxyRegistry is Ownable {
         for (uint256 i = startIndex; i < endIndex;) {
             address factory = allFactories[i];
             if (factory != address(0)) {
-                ILockingFactory(factory).upgradeTo(impl);
+                ILockingFactory(factory).upgradeToAndCall(impl, "0x");
             }
             // Use unchecked increment to save gas
             unchecked { ++i; }
